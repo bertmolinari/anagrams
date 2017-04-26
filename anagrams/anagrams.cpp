@@ -8,6 +8,7 @@
 #include <iterator>
 #include <map>
 #include <vector>
+#include <ctime>
 
 // hash map { sorted-letters -> { word1, word2, etc } }
 
@@ -20,10 +21,12 @@ int main()
 
 	
 	// read word from file
-	std::ifstream file("h:\wordlist.txt");
+	std::ifstream file("h:\\wordlist.txt");
 
 	std::string str;
 
+	std::clock_t start = std::clock();
+	
 	while (std::getline(file, str))
 	{
 
@@ -34,12 +37,16 @@ int main()
 
 		// sort letters (alphabetical)
 		Quicksort(str, 0, str.length() - 1);
-
+		//std::sort(str.begin(), str.end());
 		mymap[str].push_back(originalWord);
 
 //		::printf("--> %s\n ", str.c_str());
 	}
 
+	double duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	::printf("algo ran in: %4.3f", duration);
+	
+#ifdef NONE
 	// print out the anagrams!
 	for (std::map <std::string, std::vector<std::string>>::iterator start = mymap.begin(); start != mymap.end(); start++)
 	{
@@ -54,6 +61,7 @@ int main()
 			::printf("\n");
 		}
 	}
+#endif
 
 	// add element to hash map
 	return 0;
@@ -86,15 +94,17 @@ int PartitionString(std::string& stringToPartition, int low, int high)
 		if (stringToPartition[j] <= pivotLetter)
 		{
 			i++;
-			char temp = stringToPartition[i];
-			stringToPartition[i] = stringToPartition[j];
-			stringToPartition[j] = temp;
+			std::swap(stringToPartition[i], stringToPartition[j]);
+			//char temp = stringToPartition[i];
+			//stringToPartition[i] = stringToPartition[j];
+			//stringToPartition[j] = temp;
 		}
 	}
 
-	char temp = stringToPartition[i + 1];
-	stringToPartition[i + 1] = stringToPartition[high];
-	stringToPartition[high] = temp;
+	std::swap(stringToPartition[i + 1], stringToPartition[high]);
+	//char temp = stringToPartition[i + 1];
+	//stringToPartition[i + 1] = stringToPartition[high];
+	//stringToPartition[high] = temp;
 
 	return i + 1;
 }
